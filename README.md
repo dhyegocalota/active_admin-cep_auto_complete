@@ -11,7 +11,7 @@ gem 'active_admin-cep_auto_complete'
 **1. Create a custom page in `app/admin/cep.rb`**
 ```ruby
 ActiveAdmin.register_page 'CEP' do
-  include ActiveAdmin::CepAutoComplete::Page
+  setup_cep_auto_complete
 end
 ```
 
