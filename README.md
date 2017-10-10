@@ -84,8 +84,10 @@ $('#address_state_id').val(cep.state_id);
 
 ```javascript
 $('#address_state_id').on('active_admin:cep_auto_complete', function(e, value, cep, input) {
-  $(this).val(cep.state_id);
-  $(this).trigger('change');
+  if (value) {
+    $(this).val(value);
+    $(this).trigger('change');
+  }
 });
 ```
 

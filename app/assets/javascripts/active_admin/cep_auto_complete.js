@@ -57,6 +57,7 @@
           this.unlockFields();
         }.bind(this))
         .fail(function() {
+          this.renderEmpty();
           this.lastQuery = null;
           this.unlockFields();
         }.bind(this));
@@ -68,6 +69,14 @@
         element.val(value);
         element.trigger('change');
         element.trigger('active_admin:cep_auto_complete', [value, data, this]);
+      }.bind(this));
+    },
+
+    renderEmpty: function() {
+      $.each(this.fields, function(field, element) {
+        element.val(null);
+        element.trigger('change');
+        element.trigger('active_admin:cep_auto_complete', [null, null, this]);
       }.bind(this));
     },
 
