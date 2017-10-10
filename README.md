@@ -50,13 +50,24 @@ f.input :state_id
 **2. Add the render method to the controller**
 ```ruby
 ActiveAdmin.register_page 'CEP' do
-  include ActiveAdmin::CepAutoComplete::Page
-  
-  render_cep :state_id do |cep|
-    state = State.where("title LIKE '%?%'", cep.state).take
+  setup_cep_auto_complete do
+    # New field
+    field :state_id do |cep|
+      state = State.where("title LIKE '%?%'", cep.state).take
+      
+      if state.any?
+        state.id
+      end
+    end
     
-    if state.any?
-      state.id
+    # Another new field that uses a result from other one
+    field :some_other_field do |cep|
+      "State number #{cep.state_id}"
+    end
+    
+    # Override an original field
+    field :street do |cep|
+      "Street #{cep.street}"
     end
   end
 end
@@ -72,7 +83,7 @@ $('#address_state_id').val(cep.state_id);
 **If you want support a different plugin (like [select2](https://github.com/select2/select2)) or any other javascript render method, you can do:**
 
 ```javascript
-$('#address_state_id').on('active_admin:cep_autocomplete', function(cep) {
+$('#address_state_id').on('active_admin:cep_auto_complete', function(e, value, cep, input) {
   $(this).val(cep.state_id);
   $(this).trigger('change');
 });

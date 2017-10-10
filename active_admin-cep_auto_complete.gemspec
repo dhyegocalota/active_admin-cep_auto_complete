@@ -17,6 +17,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'railties'
   spec.add_dependency 'activeadmin', '>= 1.0.0.pre1'
+  spec.add_dependency 'postmon_ruby'
 
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'rake'
