@@ -5,6 +5,8 @@ module ActiveAdmin
         renderer = config.cep_renderer
         renderer.instance_eval(&block) if block_given?
 
+        menu false
+
         controller do
           require 'postmon_ruby'
 
