@@ -14,6 +14,7 @@
     }.bind(this), {});
     this.cepRegex = new RegExp(this.input.data('cepRegex'));
     this.onChange = scope.Utils.debounce(this.onChange.bind(this), 300);
+    this.lastValue = null;
     this.lastQuery = null;
     this.attachEvents();
   }
@@ -35,13 +36,19 @@
     },
 
     onChange: function(e) {
-      if (this.isValid(e.delegateTarget.value)) {
-        this.query(e.delegateTarget.value);
+      var value = e.delegateTarget.value;
+
+      if (this.isValid(value) && this.hasChanged(value)) {
+        this.query(value);
       }
     },
 
     isValid: function(value) {
       return !!value.match(this.cepRegex);
+    },
+
+    hasChanged: function(value) {
+      return this.lastValue !== value;
     },
 
     query: function(value) {
@@ -50,6 +57,7 @@
       }
 
       this.lockFields();
+      this.lastValue = value;
       this.lastQuery = $.get(this.url, { cep: value })
         .then(function(data) {
           this.render(data);
