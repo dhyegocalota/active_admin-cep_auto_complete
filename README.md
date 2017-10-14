@@ -7,6 +7,8 @@ Include to your Gemfile
 gem 'active_admin-cep_auto_complete'
 ```
 
+<img src="./demo.gif"/>
+
 ## Usage
 **1. Create a custom page in `app/admin/cep.rb`**
 ```ruby
