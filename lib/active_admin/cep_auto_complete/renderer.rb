@@ -1,8 +1,7 @@
 module ActiveAdmin
   module CepAutoComplete
     class Renderer
-      def initialize(page)
-        @page = page
+      def initialize
         @renderers = DEFAULT_FIELDS.map { |field| [field, default_renderer_for(field)] }.to_h.with_indifferent_access
       end
 
