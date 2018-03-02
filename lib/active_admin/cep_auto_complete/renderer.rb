@@ -2,11 +2,12 @@ module ActiveAdmin
   module CepAutoComplete
     class Renderer
       def initialize
-        @renderers = DEFAULT_FIELDS.map { |field| [field, default_renderer_for(field)] }.to_h.with_indifferent_access
+        @default_renderers = DEFAULT_FIELDS.map { |field| [field, default_renderer_for(field)] }.to_h.with_indifferent_access
+        @custom_renderers = {}.with_indifferent_access
       end
 
       def field(field_name, &block)
-        @renderers[field_name] =
+        @custom_renderers[field_name] =
           if block_given?
             block
           else
@@ -15,19 +16,19 @@ module ActiveAdmin
       end
 
       def render(query)
-        object = build_object(query)
-
-        @renderers.keys.map do |field|
-          value = @renderers[field].call(object)
-          object.public_send("#{field}=", value)
-          [field, value]
+        [@default_renderers, @custom_renderers].reduce(build_object(query)) do |object, renderers|
+          renderers.keys.each do |field|
+            value = renderers[field].call(object)
+            object.tap { object.public_send("#{field}=", value) }
+          end
+          object
         end.to_h
       end
 
       protected
 
       def default_renderer_for(field)
-        lambda { |cep| cep.public_send(field) }
+        ->(cep) { cep.public_send(field) }
       end
 
       private
@@ -37,7 +38,7 @@ module ActiveAdmin
       end
 
       def klass
-        Struct.new(:cep, *@renderers.keys)
+        Struct.new(:cep, *(@default_renderers.merge(@custom_renderers)).keys)
       end
     end
   end
