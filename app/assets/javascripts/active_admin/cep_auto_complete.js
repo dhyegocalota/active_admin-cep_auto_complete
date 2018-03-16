@@ -105,6 +105,15 @@
 
   $(document).ready(function() {
     CepInput.attach('.cep-auto-complete');
+
+    $('.has_many_add').each(function() {
+      var self = $(this);
+      var parent = self.parent('.has_many_container');
+
+      parent.on('has_many_add:after', function(e, fieldset) {
+        CepInput.attach($(fieldset).find('.cep-auto-complete'));
+      });
+    });
   });
 
   scope.CepInput = CepInput;
